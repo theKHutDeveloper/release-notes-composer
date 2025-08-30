@@ -19,6 +19,9 @@ def init_db(app: Flask) -> None:
     _engine = create_engine(url, future=True)
     _Session = scoped_session(sessionmaker(bind=_engine, autoflush=False, autocommit=False))
 
+    # ensure a clean schema when running tests
+    if app.config.get("TESTING"):
+        Base.metadata.drop_all(_engine)
     # Create tables (models import above)
     Base.metadata.create_all(_engine)
 

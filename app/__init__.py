@@ -10,11 +10,14 @@ from .config import load_config
 from .db import init_db
 
 
-def create_app() -> Flask:
+def create_app(test_config: dict | None = None) -> Flask:
     app = Flask(__name__)
 
-    # load env-driven settings
-    app.config.from_mapping(load_config())
+    cfg = load_config()
+    if test_config:
+        cfg.update(test_config)
+
+    app.config.from_mapping(cfg)
 
     # initialise database (engine, session and create tables)
     init_db(app)

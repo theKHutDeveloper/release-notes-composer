@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 
 from sqlalchemy import JSON, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -18,7 +18,7 @@ class Release(Base):
     notes_md: Mapped[str] = mapped_column(Text)
     notes_html: Mapped[str] = mapped_column(Text)
     meta: Mapped[dict] = mapped_column(JSON, default=dict)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(UTC))
 
     # Relationships
     changes: Mapped[list[Change]] = relationship(
@@ -39,7 +39,7 @@ class Change(Base):
     pr_number: Mapped[int | None] = mapped_column(Integer)
     author: Mapped[str | None] = mapped_column(String(120))
     merged_at: Mapped[datetime | None] = mapped_column(DateTime)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(UTC))
 
     # FK → releases
     release_id: Mapped[int | None] = mapped_column(ForeignKey("releases.id"))
